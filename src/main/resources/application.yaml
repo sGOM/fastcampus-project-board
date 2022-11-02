@@ -1,0 +1,26 @@
+debug: false # debug log ??
+management.endpoints.web.exposure.include: "*"
+
+logging:
+  level:
+    com.fastcampus.projectboard: debug  # ??? debug log? ??
+    org.springframework.web.servlet: debug
+    org.hibernate.type.descriptor.sql.BasicBinder: trace # query log ??
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/board
+    username: gom
+    password: 134679sd
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    defer-datasource-initialization: true # test DB ??? ?? ?? (resource/data.sql)
+    hibernate.ddl-auto: create # entity? ?? table ?? ??
+    show-sql: true # sql ?? ????
+    properties:
+      hibernate.format_sql: true # ? ??? query? formatting?? ???
+      hibernate.default_batch_fetch_size: 100 # ?? 100? ??? ?? select? ? ?? ??
+  h2.console.enabled: false # web console ??? ??
+  sql.init.mode: always # (resource/data.sql) ?? ??
+
+
