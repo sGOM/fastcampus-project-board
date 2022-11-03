@@ -21,5 +21,7 @@ spring:
       hibernate.format_sql: true # ? ??? query? formatting?? ???
       hibernate.default_batch_fetch_size: 100 # ?? 100? ??? ?? select? ? ?? ??
   sql.init.mode: always # (resource/data.sql) ?? ??
-
+  data.rest:
+    base-path: /api
+    detection-strategy: annotated # api auto creating (when it's annotated)
 
