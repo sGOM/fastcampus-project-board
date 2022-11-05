@@ -28,6 +28,9 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     compileOnly 'org.projectlombok:lombok'
+    // 각종 의존성 cache를 끄던가 (변경사항이 바로바로 보여질 수 있게)
+    // automatic restart로 빌드를 실행하면 재부팅하지 않아도 바로 적용시켜줌
+    // LiveReload 기능도 지원
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
