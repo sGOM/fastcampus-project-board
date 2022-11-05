@@ -33,6 +33,8 @@ dependencies {
     // LiveReload 기능도 지원
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
+    // user-defined property도 문서지원과 ide 지원을 받을 수 있게됨
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
     // queryDSL 설정
