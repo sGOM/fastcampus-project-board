@@ -24,4 +24,6 @@ spring:
   data.rest:
     base-path: /api
     detection-strategy: annotated # api auto creating (when it's annotated)
-
+  # user-defined property
+  # 해당 프로젝트에 /src/main/java/com.fastcampus.projectboard/config/ThymeleafConfig에 정의됨
+  thymeleaf3.decoupled-logic: true
