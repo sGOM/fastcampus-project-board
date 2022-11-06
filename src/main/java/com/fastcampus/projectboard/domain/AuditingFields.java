@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @ToString
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class AuditingFields {
+public abstract class AuditingFields {
 
     // Auditing (감사)
     // CreatedBy 같은 경우 JpaConfig에서 AuditorAware로 자동 생성
