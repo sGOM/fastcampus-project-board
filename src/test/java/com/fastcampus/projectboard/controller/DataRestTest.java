@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//@Disabled("Spring Data REST 통합테스트는 불필요하므로 제외시킴")
+@Disabled("Spring Data REST 통합테스트는 불필요하므로 제외시킴")
 @DisplayName("Data REST - API 테스트")
 // Test에서 실행하는 transaction은 기본적으로 rollback이 됨
 @Transactional
