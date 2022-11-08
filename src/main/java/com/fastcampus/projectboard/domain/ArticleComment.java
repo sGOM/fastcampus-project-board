@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Getter
-@ToString
+@ToString(callSuper = true)
 @Table(indexes = {
         @Index(columnList = "content"),
         @Index(columnList = "createdAt"),
@@ -23,18 +23,20 @@ public class ArticleComment extends AuditingFields {
     // optional = false -> 필수 값
     // cascading = none -> 댓글이 지워진다고 게시글이 지워져야되는건 아님
     @Setter @ManyToOne(optional = false) private Article article;    // 게시글 (ID)
+    @Setter @ManyToOne(optional = false) private UserAccount userAccount; // 유저 정보 (ID)
     @Setter @Column(nullable = false, length = 500) private String content; // 본문
 
     protected ArticleComment() {
     }
 
-    private ArticleComment(Article article, String content) {
+    private ArticleComment(Article article, UserAccount userAccount, String content) {
+        this.userAccount = userAccount;
         this.article = article;
         this.content = content;
     }
 
-    public static ArticleComment of(Article article, String content) {
-        return new ArticleComment(article, content);
+    public static ArticleComment of(Article article, UserAccount userAccount, String content) {
+        return new ArticleComment(article, userAccount, content);
     }
 
     @Override
