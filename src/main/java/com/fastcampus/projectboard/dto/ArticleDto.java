@@ -19,6 +19,8 @@ public record ArticleDto(
         return new ArticleDto(id, userAccountDto, title, content, hashtag, createdAt, createdBy, modifiedAt, modifiedBy);
     }
 
+    // DTO 코드에서 Domain으로 향하는 연관 관계를 끊는 것
+    // DTO 코드가 Domain 코드에 영향을 미치지 않음
     public static ArticleDto from(Article entity) {
         return new ArticleDto(
                 entity.getId(),
