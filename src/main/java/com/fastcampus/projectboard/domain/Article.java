@@ -10,7 +10,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @Getter
-@ToString(callSuper = true)
+@ToString(callSuper = true) // 부모 것 까지 toString 찍겠다
 @Table(indexes = {
         @Index(columnList = "title"),
         @Index(columnList = "hashtag"),
