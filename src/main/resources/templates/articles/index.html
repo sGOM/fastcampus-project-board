@@ -14,7 +14,12 @@
 
 <body>
 
-    <header id="header"></header>
+    <header id="header">
+        <!-- thymeleaf 가 Spring Web Server 에 의해서 렌더링 되면 치환되는 부분
+        Mock up 으로서 데이터 삽입 -->
+        헤더 삽입부
+        <hr>
+    </header>
 
     <main class="container">
         <div class="row">
@@ -67,33 +72,33 @@
 <!--            <button type="submit">검색</button>-->
 <!--        </form>-->
 
-        <table class="table">
+        <table class="table" id="article-table">
             <thead>
                 <tr>
-                    <th class="col-6">제목</th>
-                    <th class="col-2">해시태그</th>
-                    <th class="col">작성자</th>
-                    <th class="col">작성일</th>
+                    <th class="title col-6">제목</th>
+                    <th class="hashtag col-2">해시태그</th>
+                    <th class="user-id col">작성자</th>
+                    <th class="created-at col">작성일</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>첫글</td>
-                    <td>#java</td>
-                    <td>Gom</td>
-                    <td>2022-11-05</td>
+                    <td class="title"><a>첫글</a></td>
+                    <td class="hashtag">#java</td>
+                    <td class="user-id">Gom</td>
+                    <td class="created-at"><time>2022-11-05</time></td>
                 </tr>
                 <tr>
                     <td>두번째글</td>
                     <td>#spring</td>
                     <td>Gom</td>
-                    <td>2022-11-06</td>
+                    <td><time>2022-11-06</time></td>
                 </tr>
                 <tr>
                     <td>세번째글</td>
                     <td>#java</td>
                     <td>Gom</td>
-                    <td>2022-11-07</td>
+                    <td><time>2022-11-07</time></td>
                 </tr>
             </tbody>
         </table>
@@ -109,7 +114,10 @@
         </nav>
     </main>
 
-    <footer id="footer"></footer>
+    <footer id="footer">
+        <hr>
+        푸터 삽입부
+    </footer>
 
     <!-- Markup 문서는 순서대로 읽혀지면서 인터프리팅됨 -->
     <!-- JS를 상단에 배치하면 JS를 실행하고 element를 렌더링하기 때문에 시간차가 생겨 제대로된 렌더링이 안될 수 있음 -->
