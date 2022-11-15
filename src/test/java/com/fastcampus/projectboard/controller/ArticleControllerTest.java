@@ -103,12 +103,14 @@ class ArticleControllerTest {
         then(paginationService).should().getPaginationBarNumbers(pageable.getPageNumber(), Page.empty().getTotalPages());
     }
 
-    @DisplayName("[view][GET] 게시글 상세 페이지 - 정상 호출")
+    @DisplayName("[view][GET] 게시글 페이지 - 정상 호출")
     @Test
     public void givenNothing_whenRequestingArticleView_thenReturnArticleView() throws Exception {
         // Given
         Long articleId = 1L;
+        long totalCount = 1L;
         given(articleService.getArticle(articleId)).willReturn(createArticleWithCommentsDto());
+        given(articleService.getArticleCount()).willReturn(totalCount);
 
         // When & Then
         mvc.perform(get("/articles/" + articleId))
@@ -117,9 +119,10 @@ class ArticleControllerTest {
                 .andExpect(view().name("articles/detail"))
                 // 서버에서 게시글 목록을 넣어줄때 모델 어트리뷰트로 데이터를 밀어 넣어줬다는 것
                 .andExpect(model().attributeExists("article"))
-                .andExpect(model().attributeExists("articleComments"));
-
+                .andExpect(model().attributeExists("articleComments"))
+                .andExpect(model().attribute("totalCount", totalCount));
         then(articleService).should().getArticle(articleId);
+        then(articleService).should().getArticleCount();
     }
 
     @Disabled("구현 중")
