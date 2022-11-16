@@ -23,7 +23,7 @@ public class ArticleComment extends AuditingFields {
     // optional = false -> 필수 값
     // cascading = none -> 댓글이 지워진다고 게시글이 지워져야되는건 아님
     @Setter @ManyToOne(optional = false) private Article article;    // 게시글 (ID)
-    @Setter @ManyToOne(optional = false) private UserAccount userAccount; // 유저 정보 (ID)
+    @Setter @ManyToOne(optional = false) @JoinColumn(name = "userId") private UserAccount userAccount; // 유저 정보 (ID)
     @Setter @Column(nullable = false, length = 500) private String content; // 본문
 
     protected ArticleComment() {
