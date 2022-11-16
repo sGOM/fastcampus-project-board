@@ -38,6 +38,7 @@ dependencies {
     // user-defined property도 문서지원과 ide 지원을 받을 수 있게됨
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 
     // queryDSL 설정
     // 버전이 맨뒤에 붙은 경우 depdency-management가 처리해 줌
