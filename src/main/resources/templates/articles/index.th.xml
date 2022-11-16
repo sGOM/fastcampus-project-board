@@ -5,6 +5,7 @@
 
     <!-- articles 는 model attribute 로 받은 것 -->
     <attr sel="main" th:object="${articles}">
+        <attr sel="#search-form" th:action="@{/articles}" th:method="get" />
         <attr sel="#search-type" th:remove="all-but-first">
             <!-- param 은 현재 get parameter, 직전에 검색을 했다면 null 이 아닐 것, 직전에 select 한 항목 -->
             <!-- 직접꺼낸 searchTypes 는 enum 이니까 name 이 존재하는데 param 에서 꺼낸 searchType 은 그렇지 않아서 toString 을 써야함 -->
@@ -63,6 +64,8 @@
                 </attr>
             </attr>
         </attr>
+
+        <attr sel="#write-article" th:href="@{/articles/form}" />
 
         <!-- ' disabled 는 현재 페이지를 가르키는 버튼에 적용' -->
         <attr sel="#pagination">
