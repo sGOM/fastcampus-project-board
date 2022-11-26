@@ -1,11 +1,11 @@
-debug: false # debug log ??
+debug: false
 management.endpoints.web.exposure.include: "*"
 
 logging:
   level:
-    com.fastcampus.projectboard: debug  # ??? debug log? ??
+    com.fastcampus.projectboard: debug
     org.springframework.web.servlet: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace # query log ??
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
 
 spring:
   datasource:
@@ -15,13 +15,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     open-in-view: false # osiv (open seesion in view)
-    defer-datasource-initialization: true # test DB ??? ?? ?? (resource/data.sql)
-    hibernate.ddl-auto: create # entity? ?? table ?? ??
-    show-sql: true # sql ?? ????
+    defer-datasource-initialization: true
+    hibernate.ddl-auto: create
+    show-sql: true
     properties:
-      hibernate.format_sql: true # ? ??? query? formatting?? ???
-      hibernate.default_batch_fetch_size: 100 # ?? 100? ??? ?? select? ? ?? ??
-  sql.init.mode: always # (resource/data.sql) ?? ??
+      hibernate.format_sql: true
+      hibernate.default_batch_fetch_size: 100
+  sql.init.mode: always # (resource/data.sql)
   data.rest:
     base-path: /api
     detection-strategy: annotated # api auto creating (when it's annotated)
