@@ -1,7 +1,9 @@
 -- 테스트 계정
 -- TODO: 테스트용이지만 비밀번호가 노출된 데이터 세팅. 이후 개선이 필요함
+-- password 앞에 붙은 {} 는 PasswordEncoder 를 사용했을 때 어떤 형식으로 암호화를 했는지 표기
+-- {noop} 은 암호화를 하지 않은 것이고 다른 알고리즘을 사용해 암호화를 했다면 알아보기 힘들 것
 insert into user_account (user_id, user_password, nickname, email, memo, created_at, created_by, modified_at, modified_by) values
-('gom', '134679sd', 'Gom', 'gom@mail.com', 'I am Gom.', now(), 'gom', now(), 'gom')
+('gom', '{noop}134679sd', 'Gom', 'gom@mail.com', 'I am Gom.', now(), 'gom', now(), 'gom')
 ;
 
 -- 게시글 123개

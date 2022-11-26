@@ -53,8 +53,8 @@ public class Article extends AuditingFields {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Article article)) return false;
-        return id != null && id.equals(article.id);
+        if (!(o instanceof Article that)) return false;
+        return id != null && id.equals(that.getId());
     }
     // 아직 jpa에 영속화되지 않은 entity는 id가 부여되지 않았기 때문에 nullable임
     // 때문에 Id 속성이 nullable = false라도 체크

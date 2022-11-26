@@ -65,7 +65,7 @@
             </attr>
         </attr>
 
-        <attr sel="#write-article" th:href="@{/articles/form}" />
+        <attr sel="#write-article" sec:authorize="isAuthenticated()" th:href="@{/articles/form}" />
 
         <!-- ' disabled 는 현재 페이지를 가르키는 버튼에 적용' -->
         <attr sel="#pagination">

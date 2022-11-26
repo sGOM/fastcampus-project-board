@@ -11,6 +11,7 @@ import com.fastcampus.projectboard.dto.response.ArticleResponse;
 import com.fastcampus.projectboard.service.ArticleService;
 import com.fastcampus.projectboard.service.PaginationService;
 import com.fastcampus.projectboard.util.FormDataEncoder;
+import config.TestSecurityConfig;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
@@ -36,7 +40,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("View 컨트롤러 - 게시글")
-@Import({SecurityConfig.class, FormDataEncoder.class })
+// SecurityConfig.class 가 TestSecurityConfig.class 로 치환됨
+// Test 에서 Security 인증과 관련된 부분을 추가하기 위해 필요한 전부 그곳에 모아둠 (SecurityConfig 포함)
+@Import({TestSecurityConfig.class, FormDataEncoder.class })
 // default로 모든 controller bean를 읽어 들이는데 원하는 controller bean만 지정할 수 있음
 @WebMvcTest(ArticleController.class)
 class ArticleControllerTest {
@@ -44,7 +50,7 @@ class ArticleControllerTest {
     private final MockMvc mvc;
     private final FormDataEncoder formDataEncoder;
 
-    // Field 주입, MockBean의 target이 Field로 고정되어 있음
+    // Field 주입, MockBean 의 target 이 Field 로 고정되어 있음
     @MockBean private ArticleService articleService;
     @MockBean private PaginationService paginationService;
 
@@ -62,8 +68,8 @@ class ArticleControllerTest {
     @Test
     public void givenNothing_whenRequestingArticlesView_thenReturnArticlesView() throws Exception {
         // Given
-        // any같은 것을 matcher라고 하는데 필드 중 일부만 matcher를 사용할 수 없음
-        // 그래서 eq라는 matcher를 사용해 맞춰줌
+        // any 같은 것을 matcher 라고 하는데 필드 중 일부만 matcher 를 사용할 수 없음
+        // 그래서 eq 라는 matcher 를 사용해 맞춰줌
         given(articleService.searchArticles(eq(null), eq(null), any(Pageable.class)))
                 .willReturn(Page.empty()); // 데이터 검증할 필요가 없으면 빈 것으로 해도 상관 X
         // 이 테스트에서 검증할 필요 없는 부분임
@@ -77,7 +83,7 @@ class ArticleControllerTest {
                 // 서버에서 게시글 목록을 넣어줄때 모델 어트리뷰트로 데이터를 밀어 넣어줬다는 것
                 .andExpect(model().attributeExists("articles"))
                 .andExpect(model().attributeExists("paginationBarNumbers"))
-                // enum을 List로 보내주는것, 이렇게 안하면 해당 enum에 대해 View는 몰라서 건내줘야함
+                // enum 을 List 로 보내주는것, 이렇게 안하면 해당 enum 에 대해 View 는 몰라서 건내줘야함
                 .andExpect(model().attributeExists("searchTypes"));
 
         then(articleService).should().searchArticles(eq(null), eq(null), any(Pageable.class));
@@ -139,7 +145,24 @@ class ArticleControllerTest {
         then(paginationService).should().getPaginationBarNumbers(pageable.getPageNumber(), Page.empty().getTotalPages());
     }
 
-    @DisplayName("[view][GET] 게시글 페이지 - 정상 호출")
+    @DisplayName("[view][GET] 게시글 페이지 - 인증 없을 땐 로그인 페이지로 이동")
+    @Test
+    void givenNothing_whenRequestingArticlePage_thenRedirectsToLoginPage() throws Exception {
+        // Given
+        long articleId = 1L;
+
+        // When & Then
+        mvc.perform(get("/articles/" + articleId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+        then(articleService).shouldHaveNoInteractions();
+    }
+
+    // User 정보를 Mocking 해서 넣어줌
+    // - Controller Layer 에서 인증 정보를 받아서 추가로 수행하는 일이 없으면 사용가능
+    // - 인증 됐다는 시그널을 보낸 것
+    @WithMockUser
+    @DisplayName("[view][GET] 게시글 페이지 - 정상 호출, 인증된 사용자")
     @Test
     public void givenNothing_whenRequestingArticleView_thenReturnArticleView() throws Exception {
         // Given
@@ -225,6 +248,7 @@ class ArticleControllerTest {
         then(articleService).should().getHashtags();
     }
 
+    @WithMockUser
     @DisplayName("[view][GET] 새 게시글 작성 페이지")
     @Test
     void givenNothing_whenRequesting_thenReturnsNewArticlePage() throws Exception {
@@ -238,6 +262,11 @@ class ArticleControllerTest {
                 .andExpect(model().attribute("formStatus", FormStatus.CREATE));
     }
 
+    // 실제 구현한 UserDetails 를 사용, user 정보도 실제로 DB에 존재해야함 (물론 Mock DB 일 수 있음)
+    // (gomTest 는 TestSecurityConfig 에 선언되어 있음)
+    // 언제 setUp 되야하는지 설정 (여기선 test 실행 전)
+    // 추가로 UserDetailService 를 지정해줘야하는데 해당 프로젝트는 1개 뿐이기 때문에 따로 지정할 필요없어서 생략
+    @WithUserDetails(value = "gomTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("[view][POST] 새 게시글 등록 - 정상 호출")
     @Test
     void givenNewArticleInfo_whenRequesting_thenSavesNewArticle() throws Exception {
@@ -258,7 +287,21 @@ class ArticleControllerTest {
         then(articleService).should().saveArticle(any(ArticleDto.class));
     }
 
-    @DisplayName("[view][GET] 게시글 수정 페이지")
+    @DisplayName("[view][GET] 게시글 수정 페이지 - 인증 없을 땐 로그인 페이지로 이동")
+    @Test
+    void givenNothing_whenRequesting_thenRedirectionsToLo() throws Exception {
+        // Given
+        long articleId = 1L;
+
+        // When & Then
+        mvc.perform(get("/articles/" + articleId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlPattern("**/login"));
+        then(articleService).shouldHaveNoInteractions();
+    }
+
+    @WithMockUser
+    @DisplayName("[view][GET] 게시글 수정 페이지 - 정상 호출, 인증된 사용자")
     @Test
     void givenNothing_whenRequesting_thenReturnsUpdatedArticlePage() throws Exception {
         // Given
@@ -276,6 +319,7 @@ class ArticleControllerTest {
         then(articleService).should().getArticle(articleId);
     }
 
+    @WithUserDetails(value = "gomTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("[view][POST] 게시글 수정 - 정상 호출")
     @Test
     void givenUpdatedArticleInfo_whenRequesting_thenUpdatesNewArticle() throws Exception {
@@ -297,12 +341,14 @@ class ArticleControllerTest {
         then(articleService).should().updateArticle(eq(articleId), any(ArticleDto.class));
     }
 
+    @WithUserDetails(value = "gomTest", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @DisplayName("[view][POST] 게시글 삭제 - 정상 호출")
     @Test
     void givenArticleIdToDelete_whenRequesting_thenDeletesArticle() throws Exception {
         // Given
         long articleId = 1L;
-        willDoNothing().given(articleService).deleteArticle(articleId);
+        String userId = "gomTest";
+        willDoNothing().given(articleService).deleteArticle(articleId, userId);
 
         // When & Then
         mvc.perform(
@@ -313,7 +359,7 @@ class ArticleControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/articles"))
                 .andExpect(redirectedUrl("/articles"));
-        then(articleService).should().deleteArticle(articleId);
+        then(articleService).should().deleteArticle(articleId, userId);
     }
 
     private ArticleDto createArticleDto() {

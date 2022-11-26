@@ -20,6 +20,7 @@ public interface ArticleCommentRepository extends
 
     // 연관관계에 연결되어있는 article의 Id를 조회하겠다는 뜻 (id가 아닌 다른 것도 됨)
     List<ArticleComment> findByArticle_Id(Long articleId);
+    void deleteByIdAndUserAccount_UserId(Long articleCommentId, String userId);
 
     @Override
     default void customize(QuerydslBindings bindings, QArticleComment root) {

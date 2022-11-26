@@ -7,14 +7,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("JPA 연결 테스트")
-@Import(JpaConfig.class) // config package의 존재를 모름, auditing이 안될 수 있음 -> 직접 추가
+@Import(JpaRepositoryTest.TestJpaConfig.class) // config package 의 존재를 모름, auditing 이 안될 수 있음 -> 직접 추가
 @DataJpaTest
 class JpaRepositoryTest {
     private final ArticleRepository articleRepository;
@@ -92,5 +97,20 @@ class JpaRepositoryTest {
         // Then
         assertThat(articleRepository.count()).isEqualTo(previousArticleCount - 1);
         assertThat(articleCommentRepository.count()).isEqualTo(previousArticleCommentCount - deletedCommentSize);
+    }
+
+    // Test Jpa 전용 Config
+    // Jpa Config 를 사용하면 test 에서 문제가 발생하는 이유가
+    // Auditing 을 자동으로 넣는 코드 때문에 test 가 안되는 것이기 때문에
+    // Test 때만 Security 를 무시하게
+    @EnableJpaAuditing
+    // Test 할때만 등록
+    @TestConfiguration
+    public static class TestJpaConfig {
+        @Bean
+        public AuditorAware<String> auditorAware() {
+            // Security 를 적용하지 않는 코드로 작성
+            return () -> Optional.of("gom");
+        }
     }
 }
